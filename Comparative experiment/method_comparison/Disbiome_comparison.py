@@ -8,23 +8,23 @@ from matplotlib.ticker import MultipleLocator
 plt.figure(figsize=(10, 8))
 
 sheetName = 'Disbiome_AUC'
-GRNCFMDA = pd.read_excel('./Experiment.xlsx', sheet_name=sheetName, header=None)
+GRNCFMDA = pd.read_excel('./data/GRNCFMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GRNCFMDA[0], GRNCFMDA[1])
-plt.plot(GRNCFMDA[0], GRNCFMDA[1], color="#D81C38", lw=3, label='Experiment(AUC=%0.4f)' % mean_auc)
+plt.plot(GRNCFMDA[0], GRNCFMDA[1], color="#D81C38", lw=3, label='GRNCFMDA(AUC=%0.4f)' % mean_auc)
 
-MNNMDA = pd.read_excel('./MNNMDA.xlsx', sheet_name=sheetName, header=None)
+MNNMDA = pd.read_excel('./data/MNNMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(MNNMDA[0], MNNMDA[1])
 plt.plot(MNNMDA[0], MNNMDA[1], color="#62a0ca", lw=3, label='MNNMDA(AUC=%0.4f)' % mean_auc)
 
-GATMDA = pd.read_excel('./GATMDA.xlsx', sheet_name=sheetName, header=None)
+GATMDA = pd.read_excel('./data/GATMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GATMDA[0], GATMDA[1])
 plt.plot(GATMDA[0], GATMDA[1], color='#ffc089', lw=3, label='GATMDA(AUC=%0.4f)' % mean_auc)
 
-NTSHMDA = pd.read_excel('./NTSHMDA.xlsx', sheet_name=sheetName, header=None)
+NTSHMDA = pd.read_excel('./data/NTSHMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(NTSHMDA[0], NTSHMDA[1])
 plt.plot(NTSHMDA[0], NTSHMDA[1], color='#9ad19a', lw=3, label='NTSHMDA(AUC=%0.4f)' % mean_auc)
 
-LRLSHMDA = pd.read_excel('./LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
+LRLSHMDA = pd.read_excel('./data/LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(LRLSHMDA[0], LRLSHMDA[1])
 plt.plot(LRLSHMDA[0], LRLSHMDA[1], color='#9b7ebb', lw=3, label='LRLSHMDA(AUC=%0.4f)' % mean_auc)
 
@@ -48,23 +48,23 @@ plt.show()
 # 基于Disbiome数据库的PR曲线绘制
 plt.figure(figsize=(10, 8))
 sheetName = 'Disbiome_AUPR'
-GRNCFMDA = pd.read_excel('./Experiment.xlsx', sheet_name=sheetName, header=None)
+GRNCFMDA = pd.read_excel('./data/GRNCFMDA.xlsx', sheet_name=sheetName, header=None)
 mean_aupr = sklearn.metrics.auc(GRNCFMDA[0], GRNCFMDA[1])
-plt.plot(GRNCFMDA[0], GRNCFMDA[1], color="#D81C38", lw=3, label='Experiment(AUPR=%0.4f)' % mean_aupr)
+plt.plot(GRNCFMDA[0], GRNCFMDA[1], color="#D81C38", lw=3, label='GRNCFMDA(AUPR=%0.4f)' % mean_aupr)
 
-MNNMDA = pd.read_excel('./MNNMDA.xlsx', sheet_name=sheetName, header=None)
+MNNMDA = pd.read_excel('./data/MNNMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(MNNMDA[0], MNNMDA[1])
 plt.plot(MNNMDA[0], MNNMDA[1], color="#62a0ca", lw=3, label='MNNMDA(AUPR=%0.4f)' % mean_auc)
 
-GATMDA = pd.read_excel('./GATMDA.xlsx', sheet_name=sheetName, header=None)
+GATMDA = pd.read_excel('./data/GATMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GATMDA[0], GATMDA[1])
 plt.plot(GATMDA[0], GATMDA[1], color='#ffc089', lw=3, label='GATMDA(AUPR=%0.4f)' % mean_auc)
 
-NTSHMDA = pd.read_excel('./NTSHMDA.xlsx', sheet_name=sheetName, header=None)
+NTSHMDA = pd.read_excel('./data/NTSHMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(NTSHMDA[0], NTSHMDA[1])
 plt.plot(NTSHMDA[0], NTSHMDA[1], color='#9ad19a', lw=3, label='NTSHMDA(AUPR=%0.4f)' % mean_auc)
 
-LRLSHMDA = pd.read_excel('./LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
+LRLSHMDA = pd.read_excel('./data/LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(LRLSHMDA[0], LRLSHMDA[1])
 plt.plot(LRLSHMDA[0], LRLSHMDA[1], color='#9b7ebb', lw=3, label='LRLSHMDA(AUPR=%0.4f)' % mean_auc)
 
