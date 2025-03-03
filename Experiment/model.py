@@ -25,9 +25,9 @@ def drop_node(feats, drop_rate, training):
     return feats
 
 
-class NCF(nn.Module):
+class NeuCF(nn.Module):
     def __init__(self, args, num_users, num_items):
-        super(NCF, self).__init__()
+        super(NeuCF, self).__init__()
         self.num_users = num_users
         self.num_items = num_items
         self.factor_num_mf = args.factor_num
@@ -138,13 +138,13 @@ class GRAND(nn.Module):
         # 初始化投影算子，尾部的_表示"in-place"（原地操作）即：修改原值
         nn.init.xavier_uniform_(self.W_mic.data, gain=1.414)
         nn.init.xavier_uniform_(self.W_dis.data, gain=1.414)
-        self.ncf = NCF(args, self.in_micfeat_size, self.in_disfeat_size)
+        self.neucf = NeuCF(args, self.in_micfeat_size, self.in_disfeat_size)
         self.node_dropout = nn.Dropout(node_dropout)
 
     def forward(self, graph, mic_feature_tensor, dis_feature_tensor, rel_matrix, training=True):
         mic_mic_f = mic_feature_tensor.mm(self.W_mic)
         dis_dis_f = dis_feature_tensor.mm(self.W_dis)
-
+        # X:(331,128)
         X = torch.cat((mic_mic_f, dis_dis_f), dim=0)
         S = self.S
 
@@ -154,8 +154,8 @@ class GRAND(nn.Module):
             for s in range(S):
                 drop_feat = drop_node(X, self.dropout, True)  # Drop node
                 feat = GRANDConv(graph, drop_feat, self.K)  # Graph Convolution
-                train_mic_feature_input, train_dis_feature_input, train_label, = train_feature_choose(rel_matrix, feat)
-                train_prediction_result = self.ncf(train_mic_feature_input, train_dis_feature_input)
+                train_mic_feature_input, train_dis_feature_input, train_label = train_feature_choose(rel_matrix, feat)
+                train_prediction_result = self.neucf(train_mic_feature_input, train_dis_feature_input)
                 output_list.append(train_prediction_result)  # Prediction
                 labels.append(train_label)
             return output_list, labels
@@ -163,5 +163,5 @@ class GRAND(nn.Module):
             drop_feat = drop_node(X, self.dropout, False)
             X = GRANDConv(graph, drop_feat, self.K)
             test_mic_feature_input, test_dis_feature_input, test_label = test_feature_choose(rel_matrix, X)
-            test_prediction_result = self.ncf(test_mic_feature_input, test_dis_feature_input)
+            test_prediction_result = self.neucf(test_mic_feature_input, test_dis_feature_input)
             return test_prediction_result, test_label
