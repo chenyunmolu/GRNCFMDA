@@ -29,9 +29,9 @@ Install python3 for running this code（Python 3.6 myself）. And these packages
 The dataset comes from [HMDAD](https://www.cuilab.cn/hmdad) and [Disbiome](https://disbiome.ugent.be/home).
 
 | Dataset  | Microbe | Disease | Known associations |
-| -------- | ------- | ------- | ------------------ |
-| HMDAD    | 292     | 39      | 450                |
-| Disbiome | 1584    | 355     | 8697               |
+| :------: | :-----: | :-----: | :----------------: |
+|  HMDAD   |   292   |   39    |        450         |
+| Disbiome |  1584   |   355   |        8697        |
 
 ## Input file
 

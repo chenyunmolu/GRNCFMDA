@@ -21,7 +21,7 @@ start_time = timeit.default_timer()
 # 设置模型运行参数
 parser = argparse.ArgumentParser(description='GRNCFMDA')
 # data source params
-parser.add_argument('--dataset', type=str, default='HMDAD', choices=['HMDAD', 'Disbiome'], help='Name of dataset.')
+parser.add_argument('--dataset', type=str, default='Disbiome', choices=['HMDAD', 'Disbiome'], help='Name of dataset.')
 # device params
 parser.add_argument('--device', type=str, default=torch.device('cuda' if torch.cuda.is_available() else 'cpu'),
                     help='computing device')
