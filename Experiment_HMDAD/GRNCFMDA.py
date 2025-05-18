@@ -21,7 +21,7 @@ start_time = timeit.default_timer()
 # 设置模型运行参数
 parser = argparse.ArgumentParser(description='GRNCFMDA')
 # data source params
-parser.add_argument('--dataset', type=str, default='Disbiome', choices=['HMDAD', 'Disbiome'], help='Name of dataset.')
+parser.add_argument('--dataset', type=str, default='HMDAD', choices=['HMDAD', 'Disbiome'], help='Name of dataset.')
 # device params
 parser.add_argument('--device', type=str, default=torch.device('cuda' if torch.cuda.is_available() else 'cpu'),
                     help='computing device')
@@ -103,8 +103,7 @@ for i in range(0, len(positive_index_list), positive_split):
 
     new_microbe_disease_matrix_tensor = torch.from_numpy(new_microbe_disease_matrix).to(device)
     graph = build_heterograph(new_microbe_disease_matrix, MM, DD).to(device)
-
-    model = GRAND(microbe_number, disease_number, args.init_dim, args.n_class, args, args.sample,
+    model = GRAND(graph, microbe_number, disease_number, args.init_dim, args.n_class, args, args.sample,
                   args.order, args.dropnode_rate).to(device)
     opt = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     '''Training'''
@@ -112,13 +111,13 @@ for i in range(0, len(positive_index_list), positive_split):
     for epoch in range(args.epochs):
         loss_sup = 0
         train_logits, train_labels = model(graph, microbeSim_tensor, diseaseSim_tensor,
-                                           new_microbe_disease_matrix_tensor, True)
+                                           new_microbe_disease_matrix_tensor, dataset, True)
         # calculate supervised loss
         for k in range(args.sample):
             loss_sup += F.binary_cross_entropy(train_logits[k], train_labels[k])
         loss_sup = loss_sup / args.sample
         # calculate consistency loss
-        # loss_consis = consis_loss(train_logits, args.tem, args.lam)
+        loss_consis = consis_loss(train_logits, args.tem, args.lam)
         loss_train = loss_sup
         opt.zero_grad()
         loss_train.backward()
@@ -128,7 +127,7 @@ for i in range(0, len(positive_index_list), positive_split):
     model.eval()
     with torch.no_grad():
         test_logits, test_labels = model(graph, microbeSim_tensor, diseaseSim_tensor,
-                                         new_microbe_disease_matrix_tensor, False)
+                                         new_microbe_disease_matrix_tensor, dataset, False)
 
     test_predict_prob = test_logits.cpu().detach().numpy()
     test_label = test_labels.cpu().detach().numpy()

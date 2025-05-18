@@ -16,6 +16,10 @@ MNNMDA = pd.read_excel('./data/MNNMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(MNNMDA[0], MNNMDA[1])
 plt.plot(MNNMDA[0], MNNMDA[1], color="#62a0ca", lw=3, label='MNNMDA(AUC=%0.4f)' % mean_auc)
 
+MLFLHMDA = pd.read_excel('./data/MLFLHMDA.xlsx', sheet_name=sheetName, header=None)
+mean_auc = sklearn.metrics.auc(MLFLHMDA[0], MLFLHMDA[1])
+plt.plot(MLFLHMDA[0], MLFLHMDA[1], color='#9b7ebb', lw=3, label='MLFLHMDA(AUC=%0.4f)' % mean_auc)
+
 GATMDA = pd.read_excel('./data/GATMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GATMDA[0], GATMDA[1])
 plt.plot(GATMDA[0], GATMDA[1], color='#ffc089', lw=3, label='GATMDA(AUC=%0.4f)' % mean_auc)
@@ -23,10 +27,6 @@ plt.plot(GATMDA[0], GATMDA[1], color='#ffc089', lw=3, label='GATMDA(AUC=%0.4f)' 
 NTSHMDA = pd.read_excel('./data/NTSHMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(NTSHMDA[0], NTSHMDA[1])
 plt.plot(NTSHMDA[0], NTSHMDA[1], color='#9ad19a', lw=3, label='NTSHMDA(AUC=%0.4f)' % mean_auc)
-
-LRLSHMDA = pd.read_excel('./data/LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
-mean_auc = sklearn.metrics.auc(LRLSHMDA[0], LRLSHMDA[1])
-plt.plot(LRLSHMDA[0], LRLSHMDA[1], color='#9b7ebb', lw=3, label='LRLSHMDA(AUC=%0.4f)' % mean_auc)
 
 # plt.plot([0, 1], [0, 1], color='gray', linestyle='--')
 plt.xticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], fontsize='24')
@@ -56,6 +56,10 @@ MNNMDA = pd.read_excel('./data/MNNMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(MNNMDA[0], MNNMDA[1])
 plt.plot(MNNMDA[0], MNNMDA[1], color="#62a0ca", lw=3, label='MNNMDA(AUPR=%0.4f)' % mean_auc)
 
+MLFLHMDA = pd.read_excel('./data/MLFLHMDA.xlsx', sheet_name=sheetName, header=None)
+mean_auc = sklearn.metrics.auc(MLFLHMDA[0], MLFLHMDA[1])
+plt.plot(MLFLHMDA[0], MLFLHMDA[1], color='#9b7ebb', lw=3, label='MLFLHMDA(AUPR=%0.4f)' % mean_auc)
+
 GATMDA = pd.read_excel('./data/GATMDA.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GATMDA[0], GATMDA[1])
 plt.plot(GATMDA[0], GATMDA[1], color='#ffc089', lw=3, label='GATMDA(AUPR=%0.4f)' % mean_auc)
@@ -64,9 +68,6 @@ NTSHMDA = pd.read_excel('./data/NTSHMDA.xlsx', sheet_name=sheetName, header=None
 mean_auc = sklearn.metrics.auc(NTSHMDA[0], NTSHMDA[1])
 plt.plot(NTSHMDA[0], NTSHMDA[1], color='#9ad19a', lw=3, label='NTSHMDA(AUPR=%0.4f)' % mean_auc)
 
-LRLSHMDA = pd.read_excel('./data/LRLSHMDA.xlsx', sheet_name=sheetName, header=None)
-mean_auc = sklearn.metrics.auc(LRLSHMDA[0], LRLSHMDA[1])
-plt.plot(LRLSHMDA[0], LRLSHMDA[1], color='#9b7ebb', lw=3, label='LRLSHMDA(AUPR=%0.4f)' % mean_auc)
 
 plt.xticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], fontsize='24')
 plt.yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], fontsize='24')

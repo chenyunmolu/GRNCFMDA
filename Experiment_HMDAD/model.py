@@ -4,10 +4,61 @@ import torch as th
 import torch.nn as nn
 import dgl.function as fn
 import torch.nn.functional as F
+from dgl.nn.pytorch import GATv2Conv
 
 from utils import train_feature_choose, test_feature_choose
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
+class GATLayer(nn.Module):
+    def __init__(self, G, in_dim, out_dim):
+        super(GATLayer, self).__init__()
+
+        # self.disease_nodes = G.filter_nodes(lambda nodes: nodes.data['type'] == 1)
+        # self.mirna_nodes = G.filter_nodes(lambda nodes: nodes.data['type'] == 0)
+
+        self.G = G
+        self.slope = 0.2
+        self.fc = nn.Linear(in_dim, out_dim, bias=False)
+        self.m_fc = nn.Linear(292, in_dim, bias=False)
+        self.d_fc = nn.Linear(39, in_dim, bias=False)
+        self.dropout = nn.Dropout(0.5)
+        # self.attn_fc = nn.Linear(feature_attn_size * 2, 1, bias=False)
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        gain = nn.init.calculate_gain('relu')
+        nn.init.xavier_normal_(self.m_fc.weight, gain=gain)
+        nn.init.xavier_normal_(self.d_fc.weight, gain=gain)
+        # nn.init.xavier_normal_(self.attn_fc.weight, gain=gain)
+
+    def edge_attention(self, edges):
+        # print('SRC size:', edges.src['z'].size())
+        # print('DST size: ', edges.dst['z'].size())
+        # z2 = torch.cat([edges.src['z'], edges.dst['z']], dim=1)
+        # a = self.attn_fc(z2)
+        # return {'e': a}
+        a = torch.sum(edges.src['z'].mul(edges.dst['z']), dim=1).unsqueeze(1)
+        return {'e': F.leaky_relu(a, negative_slope=self.slope)}
+
+    def message_func(self, edges):
+        return {'z': edges.src['z'], 'e': edges.data['e']}
+
+    def reduce_func(self, nodes):
+        alpha = F.softmax(nodes.mailbox['e'], dim=1)
+        h = torch.sum(alpha * nodes.mailbox['z'], dim=1)
+
+        return {'h': F.elu(h)}
+
+    def forward(self, h):
+        z = self.fc(h)
+        self.G.ndata['z'] = z
+
+        self.G.apply_edges(self.edge_attention)
+        self.G.update_all(self.message_func, self.reduce_func)
+
+        return self.G.ndata.pop('h')
 
 
 def drop_node(feats, drop_rate, training):
@@ -115,6 +166,7 @@ def GRANDConv(graph, feats, order):
 
 class GRAND(nn.Module):
     def __init__(self,
+                 graph,
                  in_micfeat_size, in_disfeat_size,
                  in_dim,
                  n_class,
@@ -124,6 +176,7 @@ class GRAND(nn.Module):
                  node_dropout=0.0):
 
         super(GRAND, self).__init__()
+        self.graph = graph
         self.in_micfeat_size = in_micfeat_size
         self.in_disfeat_size = in_disfeat_size
         self.in_dim = in_dim
@@ -131,6 +184,8 @@ class GRAND(nn.Module):
         self.S = S
         self.K = K
         self.dropout = node_dropout
+        # 图注意层（多头）
+        # self.att_layer = GATv2Conv(self.in_dim, self.in_dim, 1, 0.1, 0.1, 0.3)
 
         # 定义投影算子
         self.W_mic = nn.Parameter(torch.zeros(size=(self.in_micfeat_size, self.in_dim)))
@@ -141,27 +196,47 @@ class GRAND(nn.Module):
         self.neucf = NeuCF(args, self.in_micfeat_size, self.in_disfeat_size)
         self.node_dropout = nn.Dropout(node_dropout)
 
-    def forward(self, graph, mic_feature_tensor, dis_feature_tensor, rel_matrix, training=True):
+        self.dropout1 = nn.Dropout(0.2)
+        self.gat = GATLayer(self.graph, self.in_dim, self.in_dim)
+        self.fc = nn.Linear(256, 128)
+
+    def forward(self, graph, mic_feature_tensor, dis_feature_tensor, rel_matrix, dataset, training=True):
         mic_mic_f = mic_feature_tensor.mm(self.W_mic)
         dis_dis_f = dis_feature_tensor.mm(self.W_dis)
+        init_feats = torch.cat((mic_mic_f, dis_dis_f), dim=0)
         # X:(331,128)
         X = torch.cat((mic_mic_f, dis_dis_f), dim=0)
         S = self.S
 
         if training:  # Training Mode
+
             output_list = []
             labels = []
             for s in range(S):
                 drop_feat = drop_node(X, self.dropout, True)  # Drop node
                 feat = GRANDConv(graph, drop_feat, self.K)  # Graph Convolution
-                train_mic_feature_input, train_dis_feature_input, train_label = train_feature_choose(rel_matrix, feat)
+                feat = self.gat(feat)
+                feat_output = th.cat([feat, init_feats], dim=1)
+                if dataset == 'HMDAD':
+                    feat_output = self.dropout1(F.elu(self.fc(feat_output)))
+                else:
+                    feat_output = self.dropout1(F.sigmoid(self.fc(feat_output)))
+
+                train_mic_feature_input, train_dis_feature_input, train_label = train_feature_choose(rel_matrix,
+                                                                                                     feat_output)
                 train_prediction_result = self.neucf(train_mic_feature_input, train_dis_feature_input)
                 output_list.append(train_prediction_result)  # Prediction
                 labels.append(train_label)
             return output_list, labels
         else:  # Inference Mode
             drop_feat = drop_node(X, self.dropout, False)
-            X = GRANDConv(graph, drop_feat, self.K)
-            test_mic_feature_input, test_dis_feature_input, test_label = test_feature_choose(rel_matrix, X)
+            feat = GRANDConv(graph, drop_feat, self.K)
+            feat0 = self.gat(feat)
+            feat_output = th.cat([feat0, init_feats], dim=1)
+            if dataset == 'HMDAD':
+                feat_output = self.dropout1(F.elu(self.fc(feat_output)))
+            else:
+                feat_output = self.dropout1(F.sigmoid(self.fc(feat_output)))
+            test_mic_feature_input, test_dis_feature_input, test_label = test_feature_choose(rel_matrix, feat_output)
             test_prediction_result = self.neucf(test_mic_feature_input, test_dis_feature_input)
             return test_prediction_result, test_label
