@@ -8,22 +8,22 @@ from matplotlib.ticker import MultipleLocator
 plt.figure(figsize=(10, 8))
 
 sheetName = 'GRAND_HMDAD_AUC'
-GRAND = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GRAND = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GRAND[0], GRAND[1])
 plt.plot(GRAND[0], GRAND[1], color="#D81C38", lw=3, label='GRAND(AUC=%0.4f)' % mean_auc)
 
 sheetName = 'GAT_HMDAD_AUC'
-GAT = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GAT = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GAT[0], GAT[1])
 plt.plot(GAT[0], GAT[1], color='#ffc089', lw=3, label='GAT(AUC=%0.4f)' % mean_auc)
 
 sheetName = 'GCN_HMDAD_AUC'
-GCN = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GCN = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GCN[0], GCN[1])
 plt.plot(GCN[0], GCN[1], color='#9b7ebb', lw=3, label='GCN(AUC=%0.4f)' % mean_auc)
 
 sheetName = 'RAW_HMDAD_AUC'
-RAW = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+RAW = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(RAW[0], RAW[1])
 plt.plot(RAW[0], RAW[1], color='#9ad19a', lw=3, label='RAW(AUC=%0.4f)' % mean_auc)
 
@@ -47,22 +47,22 @@ plt.savefig('./HMDAD_AUC.png')
 # 基于HMDAD数据库的PR曲线绘制
 plt.figure(figsize=(10, 8))
 sheetName = 'GRAND_HMDAD_AUPR'
-GRAND = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GRAND = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_aupr = sklearn.metrics.auc(GRAND[0], GRAND[1])
 plt.plot(GRAND[0], GRAND[1], color="#D81C38", lw=3, label='GRAND(AUPR=%0.4f)' % mean_aupr)
 
 sheetName = 'GAT_HMDAD_AUPR'
-GAT = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GAT = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GAT[0], GAT[1])
 plt.plot(GAT[0], GAT[1], color='#ffc089', lw=3, label='GAT(AUPR=%0.4f)' % mean_auc)
 
 sheetName = 'GCN_HMDAD_AUPR'
-GCN = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+GCN = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(GCN[0], GCN[1])
 plt.plot(GCN[0], GCN[1], color='#9b7ebb', lw=3, label='GCN(AUPR=%0.4f)' % mean_auc)
 
 sheetName = 'RAW_HMDAD_AUPR'
-RAW = pd.read_excel('./ablation_experiment_GRAND.xlsx', sheet_name=sheetName, header=None)
+RAW = pd.read_excel('./ablation_experiment.xlsx', sheet_name=sheetName, header=None)
 mean_auc = sklearn.metrics.auc(RAW[0], RAW[1])
 plt.plot(RAW[0], RAW[1], color='#9ad19a', lw=3, label='RAW(AUPR=%0.4f)' % mean_auc)
 

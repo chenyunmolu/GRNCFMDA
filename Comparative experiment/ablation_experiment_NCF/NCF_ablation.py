@@ -120,8 +120,8 @@ add_value_labels(bars3)
 
 plt.xticks(fontsize='24')
 plt.yticks(fontsize='24')
-# plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f'))  # 设置 Y 轴刻度格式为两位小数
-plt.ylim(0.0, 1.0)
+plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f'))  # 设置 Y 轴刻度格式为两位小数
+plt.ylim(0.8, 1.0)
 # plt.xlabel('dataset', fontsize='24')
 plt.xticks([r + bar_width + 0.05 for r in range(len(labels))], labels)
 plt.ylabel('AUPR', fontsize='24')
@@ -132,14 +132,14 @@ plt.savefig('./AUPR.png')
 
 
 # 基于ACC数据绘制柱状图
-GMF_HMDAD_acc = 0.9219
-GMF_Disbiome_acc = 0.8075
+GMF_HMDAD_acc = 0.9461
+GMF_Disbiome_acc = 0.8277
 
-MLP_HMDAD_acc = 0.8990
-MLP_Disbiome_acc = 0.8179
+MLP_HMDAD_acc = 0.9109
+MLP_Disbiome_acc = 0.8823
 
-NCF_HMDAD_acc = 0.9387
-NCF_Disbiome_acc = 0.8348
+NCF_HMDAD_acc = 0.9650
+NCF_Disbiome_acc = 0.9378
 #
 plt.figure(figsize=(10, 8))
 # 示例数据
@@ -188,14 +188,14 @@ plt.savefig('./ACC.png')
 
 
 # 基于F1-score数据绘制柱状图
-GMF_HMDAD_F1 = 0.7171
-GMF_Disbiome_F1 = 0.4570
+GMF_HMDAD_F1 = 0.9456
+GMF_Disbiome_F1 = 0.8162
 
-MLP_HMDAD_F1 = 0.6629
-MLP_Disbiome_F1 = 0.5021
+MLP_HMDAD_F1 = 0.9103
+MLP_Disbiome_F1 = 0.8705
 
-NCF_HMDAD_F1 = 0.7315
-NCF_Disbiome_F1 = 0.511
+NCF_HMDAD_F1 = 0.9648
+NCF_Disbiome_F1 = 0.9378
 #
 plt.figure(figsize=(10, 8))
 # 示例数据
@@ -232,8 +232,8 @@ add_value_labels(bars3)
 
 plt.xticks(fontsize='24')
 plt.yticks(fontsize='24')
-# plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f'))  # 设置 Y 轴刻度格式为两位小数
-plt.ylim(0.0, 1.0)
+plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f'))  # 设置 Y 轴刻度格式为两位小数
+plt.ylim(0.8, 1.0)
 # plt.xlabel('dataset', fontsize='24')
 plt.xticks([r + bar_width + 0.05 for r in range(len(labels))], labels)
 plt.ylabel('F1-score', fontsize='24')

@@ -51,10 +51,10 @@ The dataset comes from [HMDAD](https://www.cuilab.cn/hmdad) and [Disbiome](https
 
 ## Running files
 
-- `GRNCFMDA.py`：The main file for running the GRNCFMDA model is based on the HMDAD database for prediction by default.
-- `model.py`：The file contains the basic models for building GRNCFMDA models, such as GRAND and NCF models.
-- `utils.py`：The file contains methods such as building heterogeneous graphs, setting random seeds, and drawing ROC curves, and belongs to the toolkit file.
-
+- `GRNCFMDA_HMDAD.py/GRNCFMDA_Disbiome.py`：The main file for running the GRNCFMDA model is based on the HMDAD/Disbiome database for prediction by default.
+- `Prepare_data.py`：To calculate the functional similarity, GIP similarity, and disease GIP similarity of microorganisms, and thus derive the comprehensive similarity matrix between microorganisms and diseases, it is necessary to calculate the semantic similarity of diseases in advance.
+- `GRAND.py`：This file is used for high-order feature extraction of GRAND, including methods such as GRAND model and heterogeneous graph architecture
+- `NeuCF.py`：This file mainly includes the NeuCF model, negative MDA selection method, and ROC/PR curve drawing method, etc
 ## Run in HMDAD or Disbiome
 
 To run the model, default 5 fold cross validation.
@@ -65,9 +65,9 @@ arguments:
 
 example:
   Run GRNCFMDA in the HMDAD database:
-    python GRNCFMDA.py --dataset HMDAD
+    python GRNCFMDA_HMDAD.py --dataset HMDAD
   Run GRNCFMDA in the Disbiome database:
-    python GRNCFMDA.py --dataset Disbiome
+    python GRNCFMDA_Disbiome.py --dataset Disbiome
 ```
 
 
